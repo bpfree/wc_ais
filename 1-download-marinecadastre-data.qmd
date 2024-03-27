@@ -1,0 +1,145 @@
+---
+title: 1. Download Marine Cadastre Data
+format: 
+  html: 
+    code-fold: true
+    code-summary: "Show the code"
+    theme: cosmo
+    toc: true
+    toc-depth: 4
+    embed-resources: true
+execute:
+  echo: true
+  message: false
+  warning: false
+  error: false
+editor: visual
+---
+
+
+```{r}
+library(here)
+source(here("analysis", "0-set-paths.r")) # set paths for folders and files
+source(here("analysis", "r-libraries-and-custom-functions.r")) # load in libraries
+```
+
+Automatic Identification Systems (AIS) ship transponder data is downloaded from [MarineCadastre.gov](https://marinecadastre.gov/ais/), a cooperative effort between the Bureau of Ocean Energy Management (BOEM) and the National Oceanic and Atmospheric Administration (NOAA). This AIS data is collected by approximately 200 land-based receiving stations from the U.S. Coast Guard's Nationwide Automatic Identification System (NAIS).
+
+According to the data [description](https://www.fisheries.noaa.gov/inport/item/67336):
+
+> "EPSG:4269" "Completeness Report: Records were received from all U.S. Coast Guard NAIS terrestrial receivers" "Sample rate: One-minute sample rate"
+
+- The data dictionary can be found [here](https://coast.noaa.gov/data/marinecadastre/ais/data-dictionary.pdf)
+
+- There is a file for each day, with ais responses a minute apart for each ship
+
+- The code below downloads each file from their website index [here](https://coast.noaa.gov/htdata/CMSP/AISDataHandler/2022/index.html)
+
+- A sample url structure to download the zip file looks like this: `https://coast.noaa.gov/htdata/CMSP/ AISDataHandler/2022/AIS_2022_01_01.zip`.
+
+```{r}
+
+# Given a year, the function creates a vector for all the zip files to download
+generate_ais_url = function(year){
+
+    dates <- seq(from = ymd(glue("{year}-01-01")), to = ymd(glue("{year}-12-31")), by = "day")
+    urls <- glue("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/2022/AIS_{year}_{format(dates, '%m')}_{format(dates, '%d')}.zip")
+    return(urls)
+
+}
+
+urls = generate_ais_url(2022)
+
+```
+
+Next, loop through each url and download it to the hardrive (make sure to have more than 110 GB available for 1 years worth of data). Uncomment the code to run it. 
+
+```{r}
+
+
+# # Define the path where the files will be saved
+# dest_path <- ais_marinecadastre_2022_path # Adjust to your needs
+
+# # Check if the directory exists, if not, create it
+# if (!dir.exists(dest_path)) {
+#   dir.create(dest_path, recursive = TRUE)
+# }
+
+# # Function to download and save a file
+# download_save <- function(url, dest_path) {
+#   # Extract filename from the URL
+#   file_name <- basename(url)
+  
+#   # Combine destination path and filename
+#   dest_file <- file.path(dest_path, file_name)
+  
+#   # Attempt to download the file
+#   tryCatch({
+#     download.file(url, destfile = dest_file, method = "auto", mode = "wb")
+#     message("Downloaded: ", url)
+#   }, error = function(e) {
+#     message("Failed to download: ", url)
+#   })
+# }
+
+# # Apply the function to each URL
+# lapply(urls, download_save, dest_path = dest_path)
+
+```
+
+Unzip each zip file and delete the zipped folders that we don't need anymore
+
+```{r}
+
+# # Specify the path to the directory containing the zip files
+# zip_dir <- ais_marinecadastre_2022_path
+# unzip_dir <- ais_marinecadastre_2022_path
+
+# # List all zip files in the directory
+# zip_files <- list.files(path = zip_dir, pattern = "*.zip")
+
+# # Loop through each file
+# for(zip_file in zip_files) {
+  
+#   # Generate full paths to zip and unzip locations
+#   zip_path <- file.path(zip_dir, zip_file)
+#   unzip_path <- file.path(unzip_dir, tools::file_path_sans_ext(zip_file))
+  
+#   # Check if the unzip directory exists, if not, create it
+#   if(!dir.exists(unzip_path)) {
+#     dir.create(unzip_path)
+#   }
+  
+#   # Unzip the file
+#   unzip(zipfile = zip_path, exdir = unzip_path)
+  
+#   # Delete the zipped file
+#   file.remove(zip_path)
+# }
+
+```
+
+Check that all data is downloaded:
+
+```{r}
+
+# Downloaded AIS files
+ais_files = list.files(ais_marinecadastre_2022_path, full.names = TRUE, recursive = TRUE )
+
+# Expected AIS files
+
+dates <- seq(from = ymd(glue("2022-01-01")), to = ymd(glue("2022-12-31")), by = "day")
+dates = str_replace_all(dates, "-", "_")
+expected_ais_files = glue("{here(ais_marinecadastre_2022_path)}/AIS_{dates}/AIS_{dates}.csv")
+
+if(sum(ais_files == expected_ais_files) == 365){
+    print("All files downloaded")
+} else {
+    print("Files are missing")
+}
+
+
+
+
+
+```
