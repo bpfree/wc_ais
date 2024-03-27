@@ -1,0 +1,9 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+# Ignore data too large for GitHub (>100MB)
+data/a_raw_data/2023
+data/a_raw_data/USGSEsriWCMC_GlobalIslands_v3
+data/a_raw_data/World_EEZ_v12_201231025_gpkg
