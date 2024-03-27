@@ -46,8 +46,8 @@ rds_dir <- file.path(data_dir, paste0(region, year))
 load_start <- Sys.time()
 
 ## EEZ
-wc_gpkg <- file.path(data_dir, "us_west_eez", "us_wc_eez.gpkg")
-wc_time <- Sys.time()
+# eez_gpkg <- file.path(data_dir, "us_west_eez", "us_wc_eez.gpkg")
+# eez_time <- Sys.time()
 
 ## land directory
 land_gpkg <- "data/b_intermediate_data/land.gpkg"
@@ -55,6 +55,9 @@ land_gpkg <- "data/b_intermediate_data/land.gpkg"
 ## export geopackage
 wc_gpkg <- file.path(data_dir, "wc_ais.gpkg")
 
+### load AIS time-distance data
+month_point_time_distance <- sf::st_read(dsn = wc_gpkg, layer = "wc_202301_time_distance")
+ais_time <- Sys.time()
 
 ### Load continental land data
 continents <- sf::st_read(dsn = land_gpkg, layer = "continents")
@@ -73,12 +76,12 @@ very_small_islands <- sf::st_read(dsn = land_gpkg, layer = "very_small_islands")
 very_small_islands_time <- Sys.time()
 
 load_end <- Sys.time()
-print(paste("Time to take load AIS data:", wc_time - load_start, units(wc_time - load_start),
-      "Time to take load continents data:", continents_time - wc_time, units(continents_time - wc_time),
-      "Time to take load big islands data:", big_islands_time - continents_time, units(big_islands_time - continents_time),
-      "Time to take load small islands data:", small_islands_time - big_islands_time, units(small_islands_time - big_islands_time),
-      "Time to take load very small islands data:", very_small_islands_time - small_islands_time, units(very_small_islands_time - small_islands_time),
-      "Time to take load AIS and land data:", load_end - load_start, units(load_end - load_start)))
+print(paste("Time to take load AIS data:", ais_time - load_start, units(ais_time - load_start),
+            "Time to take load continents data:", continents_time - ais_time, units(continents_time - ais_time),
+            "Time to take load big islands data:", big_islands_time - continents_time, units(big_islands_time - continents_time),
+            "Time to take load small islands data:", small_islands_time - big_islands_time, units(small_islands_time - big_islands_time),
+            "Time to take load very small islands data:", very_small_islands_time - small_islands_time, units(very_small_islands_time - small_islands_time),
+            "Time to take load AIS and land data:", load_end - load_start, units(load_end - load_start)))
 
 #####################################
 #####################################
