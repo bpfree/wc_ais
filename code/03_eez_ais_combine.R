@@ -1,4 +1,6 @@
-### Combine AIS EEZ data ###
+################################
+### 03. Combine AIS EEZ data ###
+################################
 
 # Clear environment
 rm(list = ls())
