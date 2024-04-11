@@ -1,4 +1,6 @@
-### Download AIS data ###
+############################
+### 0. Download AIS data ###
+############################
 
 # Clear environment
 rm(list = ls())
@@ -101,7 +103,7 @@ download_save <- function(url, dest_path) {
 
 # run parallel function to each URL
 ## set up the cluster
-cl <- makeCluster(spec = 2, # number of clusters wanting to create
+cl <- makeCluster(spec = parallel::detectCores(), # number of clusters wanting to create (use all possible cores available)
                   type = 'PSOCK')
 
 ## run the parallel function over the urls
