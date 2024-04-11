@@ -13,6 +13,7 @@ start <- Sys.time()
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(dplyr,
                lubridate,
+               parallel,
                plyr,
                purrr,
                reshape2,
@@ -31,6 +32,9 @@ download_dir <- "data/a_raw_data"
 
 # parameters
 year <- 2023
+month <- 01
+start_day <- 01
+end_day <- 02
 
 #####################################
 #####################################
@@ -43,11 +47,11 @@ year <- 2023
 generate_ais_url = function(year){
   
   ## list dates for time frame of interest
-  dates <- seq(from = ymd(stringr::str_glue("{year}-01-01")),
-               to = ymd(stringr::str_glue("{year}-01-31")),
+  dates <- seq(from = ymd(stringr::str_glue("{year}-{month}-{start_day}")),
+               to = ymd(stringr::str_glue("{year}-{month}-{end_day}")),
                by = "day")
   
-  urls <- stringr::str_glue("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/2023/AIS_{year}_{format(dates, '%m')}_{format(dates, '%d')}.zip")
+  urls <- stringr::str_glue("https://coast.noaa.gov/htdata/CMSP/AISDataHandler/{year}/AIS_{year}_{format(dates, '%m')}_{format(dates, '%d')}.zip")
   return(urls)
 }
 
@@ -93,10 +97,18 @@ download_save <- function(url, dest_path) {
 #####################################
 
 # Apply the function to each URL
-lapply(urls, download_save, dest_path = dest_path)
+# lapply(urls, fun = download_save, dest_path = dest_path)
 
-#####################################
-#####################################
+# run parallel function to each URL
+## set up the cluster
+cl <- makeCluster(spec = 2, # number of clusters wanting to create
+                  type = 'PSOCK')
+
+## run the parallel function over the urls
+work <- parallel::parLapply(cl = cl, X = urls, fun = download_save, dest_path = dest_path)
+
+## stop the cluster
+parallel::stopCluster(cl = cl)
 
 #####################################
 #####################################
