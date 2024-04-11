@@ -36,7 +36,8 @@ download_dir <- "data/a_raw_data"
 year <- 2023
 month <- 01
 start_day <- 01
-end_day <- 02
+end_day <- lubridate::days_in_month(stringr::str_glue("{year}-{month}-{start_day}"))
+
 
 #####################################
 #####################################
@@ -139,7 +140,7 @@ for(zip_file in zip_files){
 }
 
 #print how long it takes to loop through dates
-print(paste("Takes", Sys.time() - zip_time, units(Sys.time() - zip_time), "to complete creating and adding data to dataframe", sep = " "))
+print(paste("Takes", Sys.time() - zip_time, units(Sys.time() - zip_time), "to complete unzipping data", sep = " "))
 
 #####################################
 #####################################
