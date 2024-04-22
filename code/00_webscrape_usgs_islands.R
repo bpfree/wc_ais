@@ -159,18 +159,18 @@ unzip(zipfile = file.path(data_dir, "USGSEsriWCMC_GlobalIslands_v3_mpk.zip"),
 ### relist the files
 list.files(data_dir)
 
-## rename the file so that the mappackage can get unzipped
-### ***Note: will have to manually unzip the file
-file.rename(from=file.path(data_dir, "USGSEsriWCMC_GlobalIslands_v3_mpk/USGSEsriWCMC_GlobalIslands_v3.mpk"),  # Make default download directory flexible
+# ## rename the file so that the mappackage can get unzipped
+# ### ***Note: will have to manually unzip the file
+file.rename(from=file.path(data_dir, "USGSEsriWCMC_GlobalIslands_v3.mpk"),  # Make default download directory flexible
             # send to the raw data directory
             to=file.path(data_dir, "USGSEsriWCMC_GlobalIslands_v3.zip"))
 
+### ***WARNING: only remove after have manually unzipped the data
 ## remove original zipped file
 file.remove(file.path(data_dir, "USGSEsriWCMC_GlobalIslands_v3.zip"))
 file.remove(file.path(data_dir, "USGSEsriWCMC_GlobalIslands_v3_mpk.zip"))
 
-unlink(file.path(data_dir, "USGSEsriWCMC_GlobalIslands_v3_mpk"), recursive = TRUE)
-
+# unlink(file.path(data_dir, "USGSEsriWCMC_GlobalIslands_v3_mpk"), recursive = TRUE)
 
 #####################################
 #####################################
