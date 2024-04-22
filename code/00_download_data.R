@@ -2,9 +2,7 @@
 ### 0. Download AIS data ###
 ############################
 
-adkfh af's
-
-
+test for VS Code
 
 # Clear environment
 rm(list = ls())
