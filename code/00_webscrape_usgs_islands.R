@@ -121,8 +121,9 @@ download_toggle <-remDr$findElement(using = "css selector",
                                     value = "div.table-responsive:nth-child(3) > table:nth-child(1) > caption:nth-child(1) > span:nth-child(1)")
 download_toggle$clickElement()
 
-# Wait 40 minutes for the data to download (2400 seconds = 40 minutes)
-Sys.sleep(2400)
+# Wait 10 minutes for the data to download (600 seconds = 60 minutes)
+## ***warning: amount of time to wait will depend on speed of internet
+Sys.sleep(800)
 
 #####################################
 #####################################
@@ -160,12 +161,16 @@ list.files(data_dir)
 
 ## rename the file so that the mappackage can get unzipped
 ### ***Note: will have to manually unzip the file
-file.rename(from=file.path(data_dir, "USGSEsriWCMC_GlobalIslands_v3.mpk"),  # Make default download directory flexible
+file.rename(from=file.path(data_dir, "USGSEsriWCMC_GlobalIslands_v3_mpk/USGSEsriWCMC_GlobalIslands_v3.mpk"),  # Make default download directory flexible
             # send to the raw data directory
             to=file.path(data_dir, "USGSEsriWCMC_GlobalIslands_v3.zip"))
 
 ## remove original zipped file
 file.remove(file.path(data_dir, "USGSEsriWCMC_GlobalIslands_v3.zip"))
+file.remove(file.path(data_dir, "USGSEsriWCMC_GlobalIslands_v3_mpk.zip"))
+
+unlink(file.path(data_dir, "USGSEsriWCMC_GlobalIslands_v3_mpk"), recursive = TRUE)
+
 
 #####################################
 #####################################
