@@ -2,6 +2,10 @@
 ### 0. Download AIS data ###
 ############################
 
+adkfh af's
+
+
+
 # Clear environment
 rm(list = ls())
 
