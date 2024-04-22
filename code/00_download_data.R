@@ -2,8 +2,6 @@
 ### 0. Download AIS data ###
 ############################
 
-test for VS Code
-
 # Clear environment
 rm(list = ls())
 
@@ -151,7 +149,9 @@ print(paste("Takes", Sys.time() - zip_time, units(Sys.time() - zip_time), "to co
 ais_files = list.files(download_dir, full.names = T, recursive = TRUE)
 
 # Expected AIS files
-dates <- seq(from = ymd(stringr::str_glue("2023-01-01")), to = ymd(stringr::str_glue("2023-01-31")), by = "day")
+dates <- seq(from = ymd(stringr::str_glue("{year}-{month}-{start_day}")),
+             to = ymd(stringr::str_glue("{year}-{month}-{end_day}")),
+             by = "day")
 dates <- stringr::str_replace_all(dates, "-", "_")
 expected_ais_files <- stringr::str_glue("{dest_path}/AIS_{dates}.csv")
 
