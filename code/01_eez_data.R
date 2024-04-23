@@ -28,7 +28,7 @@ pacman::p_load(dplyr,
 ## download directory
 data_dir <- "data/a_raw_data"
 
-## EEZ
+## EEZ (download source: https://marineregions.org/downloads.php)
 eez_dir <- "data/a_raw_data/World_EEZ_v12_20231025_gpkg/eez_v12.gpkg"
 
 # US west coast EEZ
