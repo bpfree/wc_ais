@@ -27,7 +27,7 @@ pacman::p_load(DescTools,
 
 ## year directory
 year <- "2023"
-month <- "01"
+month <- "02"
 region <- "wc"
 
 # fields
@@ -41,7 +41,7 @@ crs <- "EPSG:4326"
 
 # set directories
 ## AIS and big islands data directory
-data_dir <- "data/b_intermediate_data"
+data_dir <- "data/c_transect_data"
 
 # # # RDS files
 # # rds_dir <- file.path(data_dir, paste0(region, year))
