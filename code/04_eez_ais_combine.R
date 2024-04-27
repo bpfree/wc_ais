@@ -33,7 +33,7 @@ data_dir <- "data/b_intermediate_data"
 
 # parameters
 year <- "2023"
-month <- "01"
+month <- "02"
 region <- "wc"
 
 #####################################
@@ -48,8 +48,8 @@ rds_dir <- file.path(data_dir, paste0(region, year, month))
 
 # vector of files
 rds_files <- list.files(rds_dir, recursive = T, pattern = ".rds")
-subset <- grep(list.files(rds_dir, recursive = T, pattern = ".rds"), pattern = paste(year, month, sep = "_"))
-rds_files <- rds_files[subset]
+# subset <- grep(list.files(rds_dir, recursive = T, pattern = ".rds"), pattern = paste(year, month, sep = "_"))
+# rds_files <- rds_files[subset]
 
 # i <- 1
 
