@@ -48,7 +48,7 @@ data_dir <- "data/b_intermediate_data"
 # RDS files
 rds_dir <- file.path(data_dir, paste0(region, year))
 
-load_start <- Sys.time()
+# load_start <- Sys.time()
 
 ## EEZ
 # eez_gpkg <- file.path(data_dir, "us_west_eez", "us_wc_eez.gpkg")
