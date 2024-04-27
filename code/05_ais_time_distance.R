@@ -27,8 +27,10 @@ pacman::p_load(DescTools,
 
 ## year directory
 year <- "2023"
-month <- "01"
+month <- "02"
 region <- "wc"
+
+rds_month <- 2
 
 # fields
 # point_fields <- c("MMSI", "BaseDateTime", "LAT", "LON", "SOG", "COG", "VesselType", "Length", "Width", "Draft")
@@ -93,7 +95,7 @@ wc_gpkg <- file.path(data_dir, "wc_ais.gpkg")
 rds_files <- list.files(rds_dir, recursive = T, pattern = ".rds")
 
 ## Load data
-month_point <- readRDS(file = file.path(rds_dir, rds_files[1]))
+month_point <- readRDS(file = file.path(rds_dir, rds_files[rds_month]))
 
 # duplicated_data1 <- month_point %>%
 #   ## any latitudes below or above -90 and 90 or longitudes below and above -180 and 180 are not real
