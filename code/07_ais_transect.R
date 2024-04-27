@@ -56,7 +56,7 @@ data_dir <- "data/b_intermediate_data"
 # land_gpkg <- "data/b_intermediate_data/land.gpkg"
 
 ## export geopackage
-wc_gpkg <- file.path(data_dir, "wc_ais.gpkg")
+wc_gpkg <- file.path(data_dir, "wc_ais_transect.gpkg")
 # # 
 # ### load AIS time-distance data
 # # month_point_time_distance <- sf::st_read(dsn = wc_gpkg, layer = "wc_202301_time_distance")
