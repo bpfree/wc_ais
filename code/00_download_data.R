@@ -146,7 +146,10 @@ print(paste("Takes", Sys.time() - zip_time, units(Sys.time() - zip_time), "to co
 #####################################
 
 # Downloaded AIS files
-ais_files = list.files(download_dir, full.names = T, recursive = TRUE)
+ais_files = list.files(dest_path,
+                       full.names = T,
+                       pattern = stringr::str_glue("AIS_{year}_0{month}"),
+                       recursive = TRUE)
 
 # Expected AIS files
 dates <- seq(from = ymd(stringr::str_glue("{year}-{month}-{start_day}")),
@@ -155,7 +158,7 @@ dates <- seq(from = ymd(stringr::str_glue("{year}-{month}-{start_day}")),
 dates <- stringr::str_replace_all(dates, "-", "_")
 expected_ais_files <- stringr::str_glue("{dest_path}/AIS_{dates}.csv")
 
-if(sum(ais_files == expected_ais_files) == 31){
+if(sum(ais_files == expected_ais_files) == end_day){
   print("All files downloaded")
 } else {
   print("Files are missing")
