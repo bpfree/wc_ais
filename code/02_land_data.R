@@ -146,6 +146,7 @@ paste("Time to take load land data:", load_end - load_start, units(load_end - lo
 
 # Export data
 ## land data
+### ***Warning: 
 sf::st_write(obj = continents, dsn = land_gpkg, layer = "continents", append = F)
 sf::st_write(obj = small_islands, dsn = land_gpkg, layer = "small_islands", append = F)
 sf::st_write(obj = very_small_islands, dsn = land_gpkg, layer = "very_small_islands", append = F)
@@ -153,7 +154,10 @@ sf::st_write(obj = very_small_islands, dsn = land_gpkg, layer = "very_small_isla
 ### ***Note: big islands cannot get saved to the geopackage so instead gets exported as an RDS (.RData) file
 ### This is likely as when it becomes a multipolygon it has more than 999 columns
 ### See more here: https://github.com/r-spatial/sf/issues/1506
+terra::saveRDS(object = continents, file = file.path(paste(export_dir, "big_islands.RData", sep = "/")))
 terra::saveRDS(object = big_islands, file = file.path(paste(export_dir, "big_islands.RData", sep = "/")))
+terra::saveRDS(object = small_islands, file = file.path(paste(export_dir, "small_islands.RData", sep = "/")))
+terra::saveRDS(object = very_small_islands, file = file.path(paste(export_dir, "very_small_islands.RData", sep = "/")))
 
 #####################################
 #####################################
