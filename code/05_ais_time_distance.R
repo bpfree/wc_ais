@@ -27,10 +27,10 @@ pacman::p_load(DescTools,
 
 ## year directory
 year <- "2023"
-month <- "02"
+month <- "04"
 region <- "wc"
 
-rds_month <- 2
+rds_month <- 4
 
 # fields
 # point_fields <- c("MMSI", "BaseDateTime", "LAT", "LON", "SOG", "COG", "VesselType", "Length", "Width", "Draft")
@@ -95,7 +95,8 @@ wc_gpkg <- file.path(data_dir, "wc_ais.gpkg")
 rds_files <- list.files(rds_dir, recursive = T, pattern = ".rds")
 
 ## Load data
-month_point <- readRDS(file = file.path(rds_dir, rds_files[rds_month]))
+month_point <- readRDS(file = file.path(rds_dir, rds_files[rds_month])) %>%
+  dplyr::mutate_at("LAT", as.numeric)
 
 # duplicated_data1 <- month_point %>%
 #   ## any latitudes below or above -90 and 90 or longitudes below and above -180 and 180 are not real
@@ -112,7 +113,8 @@ month_point <- readRDS(file = file.path(rds_dir, rds_files[rds_month]))
 month_point_clean <- month_point %>%
   # remove bad coordinates
   ## any latitudes below or above -90 and 90 or longitudes below and above -180 and 180 are not real
-  dplyr::filter(between(LAT, -90, 90), between(LON, -180, 180)) %>%
+  dplyr::filter(between(LAT, -90, 90),
+                between(LON, -180, 180)) %>%
   # remove duplicates 
   distinct(MMSI, BaseDateTime, .keep_all = T) %>%
   dplyr::group_by(MMSI, BaseDateTime) %>%
