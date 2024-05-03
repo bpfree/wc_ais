@@ -26,7 +26,7 @@ pacman::p_load(dplyr,
 
 # parameters
 year <- "2023"
-month <- "03"
+month <- "05"
 region <- "wc"
 
 ## fields
@@ -79,9 +79,6 @@ day_function <- function(ais_file){
   ## read the CSV file
   csv <- read.csv(file = file.path(yr_dir, ais_file))
 
-  # ## assign template name (unique identifier) to CSV file
-  # assign(data_name, csv)
-
   #####################################
 
   ## generate template name for west coast EEZ for day
@@ -91,9 +88,6 @@ day_function <- function(ais_file){
     dplyr::filter(LON >= xmin & LON <= xmax,
                   LAT <= ymax & LAT >= ymin) %>%
     dplyr::select(all_of(point_fields))
-
-  # ## assign template name (unique identifier) to CSV file
-  # assign(eez_name, wc_ais)
 
   readr::write_rds(x = wc_ais, file = file.path(ais_rds_dir, paste0(eez_name, ".rds")))
 
@@ -126,46 +120,6 @@ parallel::clusterExport(cl = cl,
 work <- parallel::parLapply(cl = cl, X = ais_files, fun = day_function)
 
 parallel::stopCluster(cl = cl)
-
-# # load AIS .csv files 
-# for(i in 1:length(ais_files)){
-#   # read CSV data as separate files
-#   
-#   start2 <- Sys.time()
-#   
-#   ## generate template name
-#   data_name <- tools::file_path_sans_ext(ais_files[i])
-#   
-#   ## read the CSV file
-#   csv <- read.csv(file = file.path(yr_dir, ais_files[i]))
-#   
-#   # ## assign template name (unique identifier) to CSV file
-#   # assign(data_name, csv)
-#   
-#   #####################################
-#   
-#   ## generate template name for west coast EEZ for day
-#   eez_name <- paste(region, data_name, sep = "_")
-#   
-#   wc_ais <- csv %>%
-#     dplyr::filter(LON >= xmin & LON <= xmax,
-#                   LAT <= ymax & LAT >= ymin) %>%
-#     dplyr::select(all_of(point_fields))
-#   
-#   # ## assign template name (unique identifier) to CSV file
-#   # assign(eez_name, wc_ais)
-#   
-#   readr::write_rds(x = wc_ais, file = file.path(ais_rds_dir, paste0(eez_name, ".rds")))
-#   
-#   #####################################
-#   
-#   ## remove CSV
-#   rm(csv)
-#   rm(wc_ais)
-#   
-#   # print how long it takes to calculate
-#   print(paste("Iteration", i, "of", length(ais_files), "takes", Sys.time() - start2, units(Sys.time() - start2), "to complete limiting", data_name, "data to", region, sep = " "))
-# }
 
 # print how long it takes to loop through dates
 print(paste("Takes", Sys.time() - loop_time, units(Sys.time() - loop_time), "to complete limiting all of", year, "for", region, sep = " "))
