@@ -56,7 +56,9 @@ data_dir <- "data/c_transect_data"
 # land_gpkg <- "data/b_intermediate_data/land.gpkg"
 
 ## export geopackage
-wc_gpkg <- file.path(data_dir, "wc_ais_transect.gpkg")
+wc_ais_ocean_gpkg <- file.path(data_dir, "wc_ais_ocean.gpkg")
+wc_ais_transect_gpkg <- file.path(data_dir, "wc_ais_transect.gpkg")
+
 # # 
 # ### load AIS time-distance data
 # # month_point_time_distance <- sf::st_read(dsn = wc_gpkg, layer = "wc_202301_time_distance")
@@ -188,9 +190,9 @@ wc_gpkg <- file.path(data_dir, "wc_ais_transect.gpkg")
 # 
 # 
 
-sf::st_layers(dsn = wc_gpkg)
+sf::st_layers(dsn = wc_ocean_gpkg)
 
-month_point_time_distance_ocean <- sf::st_read(dsn = wc_gpkg, layer = "wc_202301_time_distance_ocean")
+month_point_time_distance_ocean <- sf::st_read(dsn = wc_ocean_gpkg, layer = stringr::str_glue("wc_{year}{month}_time_distance_ocean"))
 
 transect_time <- Sys.time()
 
