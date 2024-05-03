@@ -30,11 +30,11 @@ year <- "2023"
 month <- "04"
 region <- "wc"
 
-rds_month <- 4
+# rds_month <- 4
 
 # fields
 # point_fields <- c("MMSI", "BaseDateTime", "LAT", "LON", "SOG", "COG", "VesselType", "Length", "Width", "Draft")
-# line_fileds <- c("MMSI", "BaseDateTime", "VesselType", "Length", "Width", "Draft")
+# line_fields <- c("MMSI", "BaseDateTime", "VesselType", "Length", "Width", "Draft")
 
 crs <- "EPSG:4326"
 
@@ -58,7 +58,7 @@ rds_dir <- file.path(data_dir, paste0(region, year))
 # land_gpkg <- "data/b_intermediate_data/land.gpkg"
 
 ## export geopackage
-wc_gpkg <- file.path(data_dir, "wc_ais.gpkg")
+wc_ais_gpkg <- file.path(data_dir, "wc_ais.gpkg")
 
 # ### load AIS time-distance data
 # # month_point_time_distance <- sf::st_read(dsn = wc_gpkg, layer = "wc_202301_time_distance")
@@ -92,10 +92,10 @@ wc_gpkg <- file.path(data_dir, "wc_ais.gpkg")
 #####################################
 
 # vector of files
-rds_files <- list.files(rds_dir, recursive = T, pattern = ".rds")
+rds_files <- list.files(rds_dir, recursive = T, pattern = stringr::str_glue("wc{month}"))
 
 ## Load data
-month_point <- readRDS(file = file.path(rds_dir, rds_files[rds_month])) %>%
+month_point <- readRDS(file = file.path(rds_dir, rds_files)) %>%
   dplyr::mutate_at("LAT", as.numeric)
 
 # duplicated_data1 <- month_point %>%
@@ -166,7 +166,7 @@ month_point_time_distance <- month_point_clean %>%
 
 print(Sys.time() - distance_time)
 
-sf::st_write(obj = month_point_time_distance, dsn = wc_gpkg, layer = paste0(region, "_", year, month, "_time_distance"), append = F)
+sf::st_write(obj = month_point_time_distance, dsn = wc_ais_gpkg, layer = paste0(region, "_", year, month, "_time_distance"), append = F)
 
 
 
