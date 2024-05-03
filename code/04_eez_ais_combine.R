@@ -33,7 +33,7 @@ data_dir <- "data/b_intermediate_data"
 
 # parameters
 year <- "2023"
-month <- "02"
+month <- "03"
 region <- "wc"
 
 #####################################
