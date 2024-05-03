@@ -33,7 +33,7 @@ data_dir <- "data/b_intermediate_data"
 
 # parameters
 year <- "2023"
-month <- "03"
+month <- "04"
 region <- "wc"
 
 #####################################
@@ -48,8 +48,6 @@ rds_dir <- file.path(data_dir, paste0(region, year, month))
 
 # vector of files
 rds_files <- list.files(rds_dir, recursive = T, pattern = ".rds")
-# subset <- grep(list.files(rds_dir, recursive = T, pattern = ".rds"), pattern = paste(year, month, sep = "_"))
-# rds_files <- rds_files[subset]
 
 # i <- 1
 
@@ -84,6 +82,10 @@ for(i in 1:length(rds_files)){
   #####################################
   
   rds_table <- rbind(rds_table, rds)
+  
+  # make latitude and VesselType numeric when not numeric
+  rds_table <- rds_table %>%
+    dplyr::mutate(across(c("LAT", "VesselType"), as.numeric))
   
   #####################################
   
