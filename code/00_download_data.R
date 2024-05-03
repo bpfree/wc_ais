@@ -34,7 +34,7 @@ download_dir <- "data/a_raw_data"
 
 # parameters
 year <- 2023
-month <- 03
+month <- 05
 start_day <- 01
 end_day <- lubridate::days_in_month(stringr::str_glue("{year}-{month}-{start_day}"))
 
