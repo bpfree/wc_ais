@@ -25,8 +25,8 @@ pacman::p_load(dplyr,
 #####################################
 
 # parameters
-year <- "2023"
-month <- "10"
+year <- 2023
+month <- "06"
 region <- "wc"
 
 ## fields
