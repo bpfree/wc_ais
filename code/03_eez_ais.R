@@ -26,7 +26,7 @@ pacman::p_load(dplyr,
 
 # parameters
 year <- "2023"
-month <- "05"
+month <- "10"
 region <- "wc"
 
 ## fields
