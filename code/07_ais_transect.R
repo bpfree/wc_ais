@@ -97,7 +97,7 @@ print(Sys.time() - transect_time)
 #####################################
 
 # export data
-sf::st_write(obj = month_transects, dsn = wc_gpkg, layer = paste0(region, "_", year, month, "_transects"), append = F)
+sf::st_write(obj = month_transects, dsn = wc_ais_transect_gpkg, layer = paste0(region, "_", year, month, "_transects"), append = F)
 
 #####################################
 #####################################
