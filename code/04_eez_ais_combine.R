@@ -33,15 +33,15 @@ data_dir <- "data/b_intermediate_data"
 
 # parameters
 year <- "2023"
-month <- "04"
+month <- "10"
 region <- "wc"
 
 #####################################
 
-dir.create(file.path(data_dir, paste0(region, year)))
-ais_comb_dir <- file.path(data_dir, paste0(region, year))
+dir.create(file.path(data_dir, stringr::str_glue("{region}{year}")))
+ais_comb_dir <- file.path(data_dir, stringr::str_glue("{region}{year}"))
 
-rds_dir <- file.path(data_dir, paste0(region, year, month))
+rds_dir <- file.path(data_dir, stringr::str_glue("{region}{year}{month}"))
 
 #####################################
 #####################################
@@ -95,6 +95,8 @@ for(i in 1:length(rds_files)){
   # print how long it takes to calculate
   print(paste("Iteration", i, "of", length(rds_files), "takes", Sys.time() - start2, units(Sys.time() - start2), "to complete creating and adding", data_name, "data to", month, "of", year, "dataframe", sep = " "))
 }
+
+str(rds_table)
 
 # print how long it takes to loop through dates
 print(paste("Takes", Sys.time() - loop_time, units(Sys.time() - loop_time), "to complete creating and adding data to dataframe", sep = " "))
