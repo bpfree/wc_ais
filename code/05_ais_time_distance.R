@@ -27,14 +27,8 @@ pacman::p_load(DescTools,
 
 ## year directory
 year <- "2023"
-month <- "04"
+month <- "01"
 region <- "wc"
-
-# rds_month <- 4
-
-# fields
-# point_fields <- c("MMSI", "BaseDateTime", "LAT", "LON", "SOG", "COG", "VesselType", "Length", "Width", "Draft")
-# line_fields <- c("MMSI", "BaseDateTime", "VesselType", "Length", "Width", "Draft")
 
 crs <- "EPSG:4326"
 
@@ -46,16 +40,7 @@ crs <- "EPSG:4326"
 data_dir <- "data/b_intermediate_data"
 
 # RDS files
-rds_dir <- file.path(data_dir, paste0(region, year))
-
-# load_start <- Sys.time()
-
-## EEZ
-# eez_gpkg <- file.path(data_dir, "us_west_eez", "us_wc_eez.gpkg")
-# eez_time <- Sys.time()
-
-# ## land directory
-# land_gpkg <- "data/b_intermediate_data/land.gpkg"
+rds_dir <- file.path(data_dir, stringr::str_glue("{region}{year}"))
 
 ## export geopackage
 wc_ais_gpkg <- file.path(data_dir, "wc_ais.gpkg")
@@ -116,6 +101,9 @@ month_point_time_distance <- month_point_clean %>%
 
 print(Sys.time() - distance_time)
 
+#####################################
+
+# export data
 sf::st_write(obj = month_point_time_distance, dsn = wc_ais_gpkg, layer = paste0(region, "_", year, month, "_time_distance"), append = F)
 
 #####################################
