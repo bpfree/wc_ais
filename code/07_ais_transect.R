@@ -75,7 +75,7 @@ month_transects <- month_point_time_distance_ocean %>%
                    sog_sd = sd(SOG),
                    length = DescTools::Mode(Length),
                    width = DescTools::Mode(Width),
-                   # draft = DescTools::Mode(Draft),
+                   draft = DescTools::Mode(Draft),
                    vessel_type = DescTools::Mode(VesselType)) %>%
   
   # set as simple feature (sf)
