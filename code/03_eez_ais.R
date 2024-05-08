@@ -26,7 +26,7 @@ pacman::p_load(dplyr,
 
 # parameters
 year <- 2023
-month <- "06"
+month <- "12"
 region <- "wc"
 
 ## fields
@@ -48,10 +48,12 @@ yr_dir <- file.path(data_dir, year)
 # yr_dir
 # list.files(yr_dir)
 
-# RDS files
+## RDS files directory
 rds_dir <- "data/b_intermediate_data"
 
+## create directory for .RDS files
 dir.create(file.path(rds_dir, paste0(region, year, month)))
+### set directory for AIS .RDS files
 ais_rds_dir <- file.path(rds_dir, paste0(region, year, month))
 
 #####################################
@@ -66,6 +68,7 @@ ais_files <- list.files(yr_dir, recursive = T, pattern = stringr::str_glue("AIS_
 us_wc_eez <- sf::st_read(dsn = wc_gpkg, layer = "us_wc_eez")
 
 ## parameters
+### boundaries of the US west coast EEZ
 xmin <- sf::st_bbox(obj = us_wc_eez)[1] # west
 ymin <- sf::st_bbox(obj = us_wc_eez)[2] # south
 xmax <- sf::st_bbox(obj = us_wc_eez)[3] # east
@@ -84,29 +87,39 @@ day_function <- function(ais_file){
   ## generate template name for west coast EEZ for day
   eez_name <- paste(region, data_name, sep = "_")
 
+  ## limit points to west coast EEZ
   wc_ais <- csv %>%
+    # subset points to ones within the longitude and latitude of the west coast EEZ
     dplyr::filter(LON >= xmin & LON <= xmax,
                   LAT <= ymax & LAT >= ymin) %>%
+    # select all the fields that are relevant for the AIS transects
     dplyr::select(all_of(point_fields))
 
+  ## export data as .RDS file
   readr::write_rds(x = wc_ais, file = file.path(ais_rds_dir, paste0(eez_name, ".rds")))
 
   #####################################
 
-  ## remove CSV
+  ## remove CSV and west coast AIS data
   rm(csv)
   rm(wc_ais)
 }
 
+#####################################
+#####################################
+
+# run parallel analysis for subsetting the AIS data within US west coast EEZ
+
+## make the cluster
 cl <- parallel::makeCluster(spec = parallel::detectCores(), # number of clusters wanting to create
                             type = 'PSOCK')
 
-# make sure packages within function get loaded within the cluster (have to do for any non-base libraries)
+## make sure packages within function get loaded within the cluster (have to do for any non-base libraries)
 parallel::clusterCall(cl = cl, fun = library, package = 'tools', character.only = TRUE)
 parallel::clusterCall(cl = cl, fun = library, package = 'dplyr', character.only = TRUE)
 parallel::clusterCall(cl = cl, fun = library, package = 'readr', character.only = TRUE)
 
-# add variables that need to get defined out of the function to the cluster
+## add variables that need to get defined out of the function to the cluster
 parallel::clusterExport(cl = cl,
                         varlist = c('region',
                                     'yr_dir',
@@ -117,8 +130,10 @@ parallel::clusterExport(cl = cl,
                                     "point_fields",
                                     "ais_rds_dir"))
 
+## run parallel function
 work <- parallel::parLapply(cl = cl, X = ais_files, fun = day_function)
 
+## stop cluster
 parallel::stopCluster(cl = cl)
 
 # print how long it takes to loop through dates
