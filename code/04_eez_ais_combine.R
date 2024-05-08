@@ -33,14 +33,19 @@ data_dir <- "data/b_intermediate_data"
 
 # parameters
 year <- 2023
-month <- "06"
+month <- "05"
 region <- "wc"
 
 #####################################
 
+# set directories
+## create directory for region and year
 dir.create(file.path(data_dir, stringr::str_glue("{region}{year}")))
+
+## AIS combined directory
 ais_comb_dir <- file.path(data_dir, stringr::str_glue("{region}{year}"))
 
+## .RDS directory
 rds_dir <- file.path(data_dir, stringr::str_glue("{region}{year}{month}"))
 
 #####################################
