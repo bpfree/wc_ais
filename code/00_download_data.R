@@ -34,7 +34,7 @@ download_dir <- "data/a_raw_data"
 
 # parameters
 year <- 2023
-month <- 05
+month <- 12
 start_day <- 01
 end_day <- lubridate::days_in_month(stringr::str_glue("{year}-{month}-{start_day}"))
 
@@ -57,6 +57,7 @@ generate_ais_url = function(year){
   return(urls)
 }
 
+# get the URLs of interest
 urls <- generate_ais_url(year)
 urls
 
@@ -147,7 +148,7 @@ print(paste("Takes", Sys.time() - zip_time, units(Sys.time() - zip_time), "to co
 # Downloaded AIS files
 ais_files = list.files(dest_path,
                        full.names = T,
-                       pattern = stringr::str_glue("AIS_{year}_0{month}"),
+                       pattern = stringr::str_glue("AIS_{year}_0{month}"), # will work for months 0 - 9
                        recursive = TRUE)
 
 # Expected AIS files
