@@ -146,7 +146,8 @@ paste("Time to take load land data:", load_end - load_start, units(load_end - lo
 
 # Export data
 ## land data
-### ***Warning: 
+### ***Warning: when using Microsoft Azure ML, the data will not export correctly to the geopackage;
+###             thus, will need to use the .RDS files
 sf::st_write(obj = continents, dsn = land_gpkg, layer = "continents", append = F)
 sf::st_write(obj = small_islands, dsn = land_gpkg, layer = "small_islands", append = F)
 sf::st_write(obj = very_small_islands, dsn = land_gpkg, layer = "very_small_islands", append = F)
