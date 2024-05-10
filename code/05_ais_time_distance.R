@@ -27,7 +27,7 @@ pacman::p_load(DescTools,
 
 ## year directory
 year <- "2023"
-month <- "12"
+month <- "01"
 region <- "wc"
 
 crs <- "EPSG:4326"
@@ -74,10 +74,14 @@ month_point_time_distance <- month_point_clean %>%
   
   arrange(MMSI, BaseDateTime) %>%
   dplyr::mutate(date_time = as.POSIXct(BaseDateTime, tz = "UTC", "%Y-%m-%dT%H:%M:%S"),
+                # distance between points (nautical mile)
                 nm = geosphere::distVincentyEllipsoid(cbind(LON, LAT),
                                                       cbind(lag(LON), lag(LAT))) / 1852,
+                # start date (year month day)
                 start_date = format(as.POSIXct(date_time), format="%Y/%m/%d"),
+                # end time (hour minute seconds)
                 start_time = format(as.POSIXct(date_time), format = "%H:%M:%S"),
+                # time between points (as calculated in minutes)
                 mins = as.numeric(date_time - lag(date_time), units = "mins")) %>%
   # move the "nm" to be before the "mins" field
   dplyr::relocate(nm,
