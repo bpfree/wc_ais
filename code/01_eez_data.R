@@ -38,17 +38,31 @@ wc_gpkg <- file.path(data_dir, "us_west_eez", "us_wc_eez.gpkg")
 #####################################
 #####################################
 
+# parameters
+region <- "wc"
+
+#####################################
+#####################################
+
 # Global EEZ dataset (source: https://www.marineregions.org/)
 ## will need to fill out form for download to begin
 eez <- sf::st_read(dsn = eez_dir, layer = sf::st_layers(dsn = eez_dir)[[1]][grep(pattern = "eez",
                                                                                  x = sf::st_layers(dsn = eez_dir)[1])]) %>%
+  # filter for the correct exclusive economic zone
   dplyr::filter(GEONAME == "United States Exclusive Economic Zone") %>%
+  # convert to polygon (so to get unique objects)
   sf::st_cast(to = "POLYGON") %>%
+  # make all objects have valid geometry
   sf::st_make_valid()
 
+## subset for the correct polygon object
 us_wc_eez <- eez[2,]
 
-sf::st_write(obj = us_wc_eez, dsn = wc_gpkg, layer = "us_wc_eez", append = F)
+#####################################
+#####################################
+
+# export exclusive economic zone
+sf::st_write(obj = us_wc_eez, dsn = wc_gpkg, layer = stringr::str_glue("us_{region}_eez"), append = F)
 
 #####################################
 #####################################
