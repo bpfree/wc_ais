@@ -152,6 +152,7 @@ ais_files = list.files(dest_path,
                        recursive = TRUE)
 
 # Expected AIS files
+## ***warning: presently this will not produce the expected results for months 10, 11, and 12
 dates <- seq(from = ymd(stringr::str_glue("{year}-{month}-{start_day}")),
              to = ymd(stringr::str_glue("{year}-{month}-{end_day}")),
              by = "day")
