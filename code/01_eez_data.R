@@ -24,6 +24,12 @@ pacman::p_load(dplyr,
 #####################################
 #####################################
 
+# parameters
+region <- "wc"
+
+#####################################
+#####################################
+
 # set directories
 ## download directory
 data_dir <- "data/a_raw_data"
@@ -32,14 +38,9 @@ data_dir <- "data/a_raw_data"
 eez_dir <- "data/a_raw_data/World_EEZ_v12_20231025_gpkg/eez_v12.gpkg"
 
 # US west coast EEZ
-wc_dir <- dir.create(file.path(data_dir, "us_west_eez"))
-wc_gpkg <- file.path(data_dir, "us_west_eez", "us_wc_eez.gpkg")
-
-#####################################
-#####################################
-
-# parameters
-region <- "wc"
+region_dir <- dir.create(file.path(data_dir, stringr::str_glue("us_{region}_eez")))
+wc_dir <- file.path(data_dir, stringr::str_glue("us_{region}_eez"))
+wc_gpkg <- file.path(data_dir, stringr::str_glue("us_{region}_eez"), stringr::str_glue("us_{region}_eez.gpkg"))
 
 #####################################
 #####################################
@@ -56,13 +57,17 @@ eez <- sf::st_read(dsn = eez_dir, layer = sf::st_layers(dsn = eez_dir)[[1]][grep
   sf::st_make_valid()
 
 ## subset for the correct polygon object
-us_wc_eez <- eez[2,]
+eez <- eez[2,]
 
 #####################################
 #####################################
 
 # export exclusive economic zone
-sf::st_write(obj = us_wc_eez, dsn = wc_gpkg, layer = stringr::str_glue("us_{region}_eez"), append = F)
+sf::st_write(obj = eez, dsn = wc_gpkg, layer = stringr::str_glue("us_{region}_eez"), append = F)
+
+## ***note: for when running in Microsoft Azure ML, data have to get exported as .rds file;
+##          so uncomment when working on Microsoft Azure ML
+# terra::saveRDS(object - us_wc_eez, file = file.path(paste(region_dir, stringr::str_glue("us_{region}_eez.rds"), sep = "/")))
 
 #####################################
 #####################################
