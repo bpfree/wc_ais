@@ -35,20 +35,20 @@ region <- "wc"
 data_dir <- "data/a_raw_data"
 
 ## EEZ (download source: https://marineregions.org/downloads.php)
-eez_dir <- "data/a_raw_data/World_EEZ_v12_20231025_gpkg/eez_v12.gpkg"
+world_eez_gpkg <- "data/a_raw_data/World_EEZ_v12_20231025_gpkg/eez_v12.gpkg"
 
 # US west coast EEZ
 region_dir <- dir.create(file.path(data_dir, stringr::str_glue("us_{region}_eez")))
-wc_dir <- file.path(data_dir, stringr::str_glue("us_{region}_eez"))
-wc_gpkg <- file.path(data_dir, stringr::str_glue("us_{region}_eez"), stringr::str_glue("us_{region}_eez.gpkg"))
+eez_dir <- file.path(data_dir, stringr::str_glue("us_{region}_eez"))
+region_eez_gpkg <- file.path(data_dir, stringr::str_glue("us_{region}_eez"), stringr::str_glue("us_{region}_eez.gpkg"))
 
 #####################################
 #####################################
 
 # Global EEZ dataset (source: https://www.marineregions.org/)
 ## will need to fill out form for download to begin
-eez <- sf::st_read(dsn = eez_dir, layer = sf::st_layers(dsn = eez_dir)[[1]][grep(pattern = "eez",
-                                                                                 x = sf::st_layers(dsn = eez_dir)[1])]) %>%
+eez <- sf::st_read(dsn = world_eez_gpkg, layer = sf::st_layers(dsn = world_eez_gpkg)[[1]][grep(pattern = "eez",
+                                                                                               x = sf::st_layers(dsn = world_eez_gpkg)[1])]) %>%
   # filter for the correct exclusive economic zone
   dplyr::filter(GEONAME == "United States Exclusive Economic Zone") %>%
   # convert to polygon (so to get unique objects)
@@ -63,7 +63,7 @@ eez <- eez[2,]
 #####################################
 
 # export exclusive economic zone
-sf::st_write(obj = eez, dsn = wc_gpkg, layer = stringr::str_glue("us_{region}_eez"), append = F)
+sf::st_write(obj = eez, dsn = region_eez_gpkg, layer = stringr::str_glue("us_{region}_eez"), append = F)
 
 ## ***note: for when running in Microsoft Azure ML, data have to get exported as .rds file;
 ##          so uncomment when working on Microsoft Azure ML
