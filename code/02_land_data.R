@@ -53,7 +53,7 @@ pacman::p_load(docxtractr,
 #####################################
 
 # Create directories
-dir.create("data/a_raw_data")
+# dir.create("data/a_raw_data")
 
 #####################################
 
