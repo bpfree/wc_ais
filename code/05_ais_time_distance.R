@@ -27,7 +27,7 @@ pacman::p_load(DescTools,
 
 ## year directory
 year <- "2023"
-month <- "01"
+month <- "04"
 region <- "wc"
 
 crs <- "EPSG:4326"
@@ -43,17 +43,18 @@ data_dir <- "data/b_intermediate_data"
 rds_dir <- file.path(data_dir, stringr::str_glue("{region}{year}"))
 
 ## export geopackage
-wc_ais_gpkg <- file.path(data_dir, "wc_ais.gpkg")
+ais_gpkg <- file.path(data_dir, stringr::str_glue("{region}_ais.gpkg"))
 
 #####################################
 #####################################
 
 # vector of files
-rds_files <- list.files(rds_dir, recursive = T, pattern = stringr::str_glue("wc{month}"))
+rds_files <- list.files(rds_dir, recursive = T, pattern = stringr::str_glue("{region}{month}"))
 
 ## Load data
 month_point <- readRDS(file = file.path(rds_dir, rds_files))
 
+## clean month-point data for distinct points in real longitudes and latitudes
 month_point_clean <- month_point %>%
   # remove bad coordinates
   ## any latitudes below or above -90 and 90 or longitudes below and above -180 and 180 are not real
@@ -67,22 +68,23 @@ month_point_clean <- month_point %>%
   # ungroup to add in the information back to the vessel and date-time for later calculations
   dplyr::ungroup()
 
+## remove the month-point data
+rm(month_point)
+
+#####################################
+
+# calculate distances and time between points
+
+## set start time for calculation
 distance_time <- Sys.time()
 
 ## ***note: distances will need to be under 1 nautical mile (1 nautical mile = 1852 meters)
 month_point_time_distance <- month_point_clean %>%
-  
   arrange(MMSI, BaseDateTime) %>%
-  dplyr::mutate(date_time = as.POSIXct(BaseDateTime, tz = "UTC", "%Y-%m-%dT%H:%M:%S"),
-                # distance between points (nautical mile)
-                nm = geosphere::distVincentyEllipsoid(cbind(LON, LAT),
-                                                      cbind(lag(LON), lag(LAT))) / 1852,
-                # start date (year month day)
-                start_date = format(as.POSIXct(date_time), format="%Y/%m/%d"),
-                # end time (hour minute seconds)
-                start_time = format(as.POSIXct(date_time), format = "%H:%M:%S"),
+  dplyr::mutate(nm = geosphere::distVincentyEllipsoid(cbind(LON, LAT),
+                                                      cbind(lag(LON), lag(LAT))) / 1852, # distance between points (nautical mile)
                 # time between points (as calculated in minutes)
-                mins = as.numeric(date_time - lag(date_time), units = "mins")) %>%
+                mins = as.numeric(BaseDateTime - lag(BaseDateTime), units = "mins")) %>%
   # move the "nm" to be before the "mins" field
   dplyr::relocate(nm,
                   .before = mins) %>%
@@ -103,12 +105,16 @@ month_point_time_distance <- month_point_clean %>%
                                   no = 1) %>% cumsum(),
                 vessel_trans = paste(MMSI, transect, sep = "_"))
 
+## print how long it took to calculate distance and time between points
 print(Sys.time() - distance_time)
+
+## remove cleaned month-point data
+rm(month_point_clean)
 
 #####################################
 
 # export data
-sf::st_write(obj = month_point_time_distance, dsn = wc_ais_gpkg, layer = paste0(region, "_", year, month, "_time_distance"), append = F)
+sf::st_write(obj = month_point_time_distance, dsn = ais_gpkg, layer = paste0(region, "_", year, month, "_time_distance"), append = F)
 
 #####################################
 #####################################
