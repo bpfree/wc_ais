@@ -41,7 +41,11 @@ point_fields <- c("MMSI", "BaseDateTime", "LAT", "LON", "SOG", "COG", "VesselTyp
 data_dir <- "data/a_raw_data"
 
 ## EEZ
-wc_gpkg <- file.path(data_dir, "us_west_eez", "us_wc_eez.gpkg")
+### use geopackage when running locally
+eez_gpkg <- file.path(data_dir, stringr::str_glue("us_{region}_eez"), stringr::str_glue("us_{region}_eez.gpkg"))
+
+### use .rds file when running on Microsoft Azure ML
+# wc_rds <- filepath(data_dir, stringr::str_glue("us_{region}_eez"))
 
 ## year directory
 yr_dir <- file.path(data_dir, year)
@@ -52,7 +56,13 @@ yr_dir <- file.path(data_dir, year)
 rds_dir <- "data/b_intermediate_data"
 
 ## create directory for .RDS files
-dir.create(file.path(rds_dir, paste0(region, year, month)))
+dest_path <- file.path(rds_dir, paste0(region, year, month))
+
+### Check if the directory exists, if not, create it
+if (!dir.exists(dest_path)) {
+  dir.create(dest_path, recursive = TRUE)
+}
+
 ### set directory for AIS .RDS files
 ais_rds_dir <- file.path(rds_dir, paste0(region, year, month))
 
@@ -65,14 +75,18 @@ ais_files <- list.files(yr_dir, recursive = T, pattern = stringr::str_glue("AIS_
 # ais_files
 
 # load US west coast EEZ
-us_wc_eez <- sf::st_read(dsn = wc_gpkg, layer = "us_wc_eez")
+## use geopackage when running locally
+eez <- sf::st_read(dsn = eez_gpkg, layer = stringr::str_glue("us_{region}_eez"))
+
+## use .rds file when running on Microsoft Azure ML
+# eez <- readRDS(file = file.path(wc_rds, stringr::str_glue("us_{region}_eez.rds")))
 
 ## parameters
 ### boundaries of the US west coast EEZ
-xmin <- sf::st_bbox(obj = us_wc_eez)[1] # west
-ymin <- sf::st_bbox(obj = us_wc_eez)[2] # south
-xmax <- sf::st_bbox(obj = us_wc_eez)[3] # east
-ymax <- sf::st_bbox(obj = us_wc_eez)[4] # north
+xmin <- sf::st_bbox(obj = eez)[1] # west
+ymin <- sf::st_bbox(obj = eez)[2] # south
+xmax <- sf::st_bbox(obj = eez)[3] # east
+ymax <- sf::st_bbox(obj = eez)[4] # north
 
 loop_time <- Sys.time()
 
@@ -80,7 +94,7 @@ day_function <- function(ais_file){
   data_name <- tools::file_path_sans_ext(ais_file)
 
   ## read the CSV file
-  csv <- read.csv(file = file.path(yr_dir, ais_file))
+  csv <- readr::read_csv(file = file.path(yr_dir, ais_file))
 
   #####################################
 
@@ -88,7 +102,7 @@ day_function <- function(ais_file){
   eez_name <- paste(region, data_name, sep = "_")
 
   ## limit points to west coast EEZ
-  wc_ais <- csv %>%
+  region_ais <- csv %>%
     # subset points to ones within the longitude and latitude of the west coast EEZ
     dplyr::filter(LON >= xmin & LON <= xmax,
                   LAT <= ymax & LAT >= ymin) %>%
@@ -96,7 +110,7 @@ day_function <- function(ais_file){
     dplyr::select(all_of(point_fields))
 
   ## export data as .RDS file
-  readr::write_rds(x = wc_ais, file = file.path(ais_rds_dir, paste0(eez_name, ".rds")))
+  readr::write_rds(x = region_ais, file = file.path(ais_rds_dir, paste0(eez_name, ".rds")))
 
   #####################################
 
