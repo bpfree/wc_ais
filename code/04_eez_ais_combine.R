@@ -26,27 +26,32 @@ pacman::p_load(dplyr,
 
 # set directories
 ## RDS files
-data_dir <- "data/b_intermediate_data"
+# data_dir <- "data/b_intermediate_data"
 
 #####################################
 #####################################
 
 # parameters
 year <- 2023
-month <- "05"
+month <- "12"
 region <- "wc"
 
 #####################################
 
 # set directories
-## create directory for region and year
-dir.create(file.path(data_dir, stringr::str_glue("{region}{year}")))
+# ## create directory for region and year
+# dest_path <- file.path("data/b_intermediate_data", stringr::str_glue("{region}{year}"))
+# 
+# ## Check if the directory exists, if not, create it
+# if (!dir.exists(dest_path)) {
+#   dir.create(dest_path, recursive = TRUE)
+# }
 
 ## AIS combined directory
-ais_comb_dir <- file.path(data_dir, stringr::str_glue("{region}{year}"))
+ais_comb_dir <- file.path("data/b_intermediate_data", stringr::str_glue("{region}{year}"))
 
 ## .RDS directory
-rds_dir <- file.path(data_dir, stringr::str_glue("{region}{year}{month}"))
+rds_dir <- file.path("data/b_intermediate_data", stringr::str_glue("{region}{year}{month}"))
 
 #####################################
 #####################################
@@ -89,8 +94,8 @@ for(i in 1:length(rds_files)){
   rds_table <- rbind(rds_table, rds)
   
   # make latitude and VesselType numeric when not numeric
-  rds_table <- rds_table %>%
-    dplyr::mutate(across(c("LAT", "VesselType"), as.numeric))
+  # rds_table <- rds_table %>%
+  #   dplyr::mutate(across(c("LAT", "VesselType"), as.numeric))
   
   #####################################
   
