@@ -28,7 +28,7 @@ pacman::p_load(DescTools,
 # parameters
 ## year directory
 year <- "2023"
-month <- "04"
+month <- "01"
 region <- "wc"
 
 #####################################
@@ -39,13 +39,13 @@ region <- "wc"
 data_dir <- "data/b_intermediate_data"
 
 ## AIS geopackage
-wc_ais_gpkg <- file.path(data_dir, "wc_ais.gpkg")
+ais_gpkg <- file.path(data_dir, stringr::str_glue("{region}_ais.gpkg"))
 
 ## land directory
 land_gpkg <- "data/b_intermediate_data/land.gpkg"
 
 ## export geopackage
-wc_ais_ocean_gpkg <- file.path(data_dir, "wc_ais_ocean.gpkg")
+ais_ocean_gpkg <- file.path(data_dir, stringr::str_glue("{region}_ais_ocean.gpkg"))
 
 #####################################
 
@@ -53,7 +53,7 @@ wc_ais_ocean_gpkg <- file.path(data_dir, "wc_ais_ocean.gpkg")
 load_start <- Sys.time()
 
 ## load AIS time-distance data
-month_point_time_distance <- sf::st_read(dsn = wc_ais_gpkg, layer = stringr::str_glue("wc_{year}{month}_time_distance"))
+month_point_time_distance <- sf::st_read(dsn = ais_gpkg, layer = stringr::str_glue("{region}_{year}{month}_time_distance"))
 ais_time <- Sys.time()
 
 ## Load continental land data
@@ -103,7 +103,7 @@ month_point_time_distance_ocean <- month_point_time_distance %>%
 print(Sys.time() - ocean_time)
 
 ## export month AIS data in ocean
-sf::st_write(obj = month_point_time_distance_ocean, dsn = wc_ais_ocean_gpkg, layer = paste0(region, "_", year, month, "_time_distance_ocean"), append = F)
+sf::st_write(obj = month_point_time_distance_ocean, dsn = ais_ocean_gpkg, layer = paste0(region, "_", year, month, "_time_distance_ocean"), append = F)
 
 #####################################
 #####################################
