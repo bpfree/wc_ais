@@ -27,7 +27,7 @@ pacman::p_load(DescTools,
 
 ## year directory
 year <- "2023"
-month <- "04"
+month <- "06"
 region <- "wc"
 
 crs <- "EPSG:4326"
