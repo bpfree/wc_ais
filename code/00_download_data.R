@@ -27,7 +27,7 @@ pacman::p_load(dplyr,
 
 # set directories
 ## download directory
-download_dir <- "data/a_raw_data"
+# download_dir <- 
 
 #####################################
 #####################################
@@ -65,12 +65,12 @@ urls
 #####################################
 
 # Define the path where the files will be saved
-dest_path <- file.path(download_dir, year)
+dest_path <- file.path("data/a_raw_data", year)
 
-# Check if the directory exists, if not, create it
-if (!dir.exists(dest_path)) {
-  dir.create(dest_path, recursive = TRUE)
-}
+# # Check if the directory exists, if not, create it
+# if (!dir.exists(dest_path)) {
+#   dir.create(dest_path, recursive = TRUE)
+# }
 
 #####################################
 
