@@ -32,15 +32,21 @@ region <- "wc"
 
 # set directories
 ## download directory
-data_dir <- "data/a_raw_data"
+# data_dir <- "data/a_raw_data"
 
 ## EEZ (download source: https://marineregions.org/downloads.php)
 world_eez_gpkg <- "data/a_raw_data/World_EEZ_v12_20231025_gpkg/eez_v12.gpkg"
 
 # US west coast EEZ
-region_dir <- dir.create(file.path(data_dir, stringr::str_glue("us_{region}_eez")))
-eez_dir <- file.path(data_dir, stringr::str_glue("us_{region}_eez"))
-region_eez_gpkg <- file.path(data_dir, stringr::str_glue("us_{region}_eez"), stringr::str_glue("us_{region}_eez.gpkg"))
+## region directory
+# dest_path <- file.path("data/a_raw_data", stringr::str_glue("us_{region}_eez"))
+# 
+# ## Check if the directory exists, if not, create it
+# if (!dir.exists(dest_path)) {
+#   dir.create(dest_path, recursive = TRUE)
+# }
+
+region_eez_gpkg <- file.path("data/a_raw_data", stringr::str_glue("us_{region}_eez"), stringr::str_glue("us_{region}_eez.gpkg"))
 
 #####################################
 #####################################
