@@ -28,7 +28,7 @@ pacman::p_load(DescTools,
 # parameters
 ## year directory
 year <- "2023"
-month <- "04"
+month <- "01"
 region <- "wc"
 
 crs <- "EPSG:4326"
@@ -42,21 +42,21 @@ intermediate_dir <- "data/b_intermediate_data"
 data_dir <- "data/c_transect_data"
 
 ## AIS ocean geopackage
-wc_ais_ocean_gpkg <- file.path(intermediate_dir, "wc_ais_ocean.gpkg")
+ais_ocean_gpkg <- file.path(intermediate_dir, stringr::string_glue("{region}_ais_ocean.gpkg"))
 
 ### inspect layers
-sf::st_layers(dsn = wc_ais_ocean_gpkg)
+sf::st_layers(dsn = stringr::str_glue("{region}_ais_ocean_gpkg"))
 
 ## export geopackage
 ### AIS transect geopackage
-wc_ais_transect_gpkg <- file.path(data_dir, "wc_ais_transect.gpkg")
+ais_transect_gpkg <- file.path(data_dir, stringr::str_glue("{region}_ais_transect.gpkg"))
 
 #####################################
 #####################################
 
 # create transects
 ## load monthly ocean AIS data
-month_point_time_distance_ocean <- sf::st_read(dsn = wc_ais_ocean_gpkg, layer = stringr::str_glue("wc_{year}{month}_time_distance_ocean"))
+month_point_time_distance_ocean <- sf::st_read(dsn = wc_ais_ocean_gpkg, layer = stringr::str_glue("{region}_{year}{month}_time_distance_ocean"))
 
 transect_time <- Sys.time()
 
@@ -97,7 +97,7 @@ print(Sys.time() - transect_time)
 #####################################
 
 # export data
-sf::st_write(obj = month_transects, dsn = wc_ais_transect_gpkg, layer = paste0(region, "_", year, month, "_transects"), append = F)
+sf::st_write(obj = month_transects, dsn = ais_transect_gpkg, layer = paste0(region, "_", year, month, "_transects"), append = F)
 
 #####################################
 #####################################
