@@ -28,7 +28,7 @@ pacman::p_load(DescTools,
 # parameters
 ## year directory
 year <- "2023"
-month <- "01"
+month <- "02"
 region <- "wc"
 
 #####################################
@@ -36,16 +36,16 @@ region <- "wc"
 
 # set directories
 ## AIS and big islands data directory
-data_dir <- "data/b_intermediate_data"
+# data_dir <- "data/b_intermediate_data"
 
 ## AIS geopackage
-ais_gpkg <- file.path(data_dir, stringr::str_glue("{region}_ais.gpkg"))
+ais_gpkg <- file.path("data/b_intermediate_data", stringr::str_glue("{region}_ais.gpkg"))
 
 ## land directory
-land_gpkg <- "data/b_intermediate_data/land.gpkg"
+land_gpkg <- file.path("data/b_intermediate_data", "land.gpkg")
 
 ## export geopackage
-ais_ocean_gpkg <- file.path(data_dir, stringr::str_glue("{region}_ais_ocean.gpkg"))
+ais_ocean_gpkg <- file.path("data/b_intermediate_data", stringr::str_glue("{region}_ais_ocean.gpkg"))
 
 #####################################
 
@@ -61,7 +61,7 @@ continents <- sf::st_read(dsn = land_gpkg, layer = "continents")
 continents_time <- Sys.time()
 
 ## Load big island land data
-big_islands <- terra::readRDS(file = file.path(data_dir, "big_islands.RData"))
+big_islands <- terra::readRDS(file = file.path("data/b_intermediate_data", "big_islands.RData"))
 big_islands_time <- Sys.time()
 
 ## Load small island land data
@@ -101,6 +101,17 @@ month_point_time_distance_ocean <- month_point_time_distance %>%
 
 # calculate time to create annual shrimp fishing data in only ocean areas
 print(Sys.time() - ocean_time)
+
+#####################################
+
+# remove land data and month point data with time and distance
+rm(continents)
+rm(big_islands)
+rm(small_islands)
+rm(very_small_islands)
+rm(month_point_time_distance)
+
+#####################################
 
 ## export month AIS data in ocean
 sf::st_write(obj = month_point_time_distance_ocean, dsn = ais_ocean_gpkg, layer = paste0(region, "_", year, month, "_time_distance_ocean"), append = F)
