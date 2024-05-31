@@ -28,7 +28,7 @@ pacman::p_load(DescTools,
 # parameters
 ## year directory
 year <- "2023"
-month <- "01"
+month <- "12"
 region <- "wc"
 
 crs <- "EPSG:4326"
@@ -42,10 +42,10 @@ intermediate_dir <- "data/b_intermediate_data"
 data_dir <- "data/c_transect_data"
 
 ## AIS ocean geopackage
-ais_ocean_gpkg <- file.path(intermediate_dir, stringr::string_glue("{region}_ais_ocean.gpkg"))
+ais_ocean_gpkg <- file.path(intermediate_dir, stringr::str_glue("{region}_ais_ocean.gpkg"))
 
 ### inspect layers
-sf::st_layers(dsn = stringr::str_glue("{region}_ais_ocean_gpkg"))
+sf::st_layers(dsn = stringr::str_glue(ais_ocean_gpkg))
 
 ## export geopackage
 ### AIS transect geopackage
@@ -56,7 +56,7 @@ ais_transect_gpkg <- file.path(data_dir, stringr::str_glue("{region}_ais_transec
 
 # create transects
 ## load monthly ocean AIS data
-month_point_time_distance_ocean <- sf::st_read(dsn = wc_ais_ocean_gpkg, layer = stringr::str_glue("{region}_{year}{month}_time_distance_ocean"))
+month_point_time_distance_ocean <- sf::st_read(dsn = ais_ocean_gpkg, layer = stringr::str_glue("{region}_{year}{month}_time_distance_ocean"))
 
 transect_time <- Sys.time()
 
@@ -75,7 +75,7 @@ month_transects <- month_point_time_distance_ocean %>%
                    sog_sd = sd(SOG),
                    length = DescTools::Mode(Length),
                    width = DescTools::Mode(Width),
-                   draft = DescTools::Mode(Draft),
+                   # draft = DescTools::Mode(Draft),
                    vessel_type = DescTools::Mode(VesselType)) %>%
   
   # set as simple feature (sf)
