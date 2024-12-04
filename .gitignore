@@ -9,3 +9,5 @@ data/a_raw_data/USGSEsriWCMC_GlobalIslands_v3
 data/a_raw_data/World_EEZ_v12_20231025_gpkg
 
 data/b_intermediate_data
+
+data/c_transect_data
